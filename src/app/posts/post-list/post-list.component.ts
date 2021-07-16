@@ -10,21 +10,6 @@ import { PostsService } from '../posts.service';
   styleUrls: ['./post-list.component.css'],
 })
 export class PostListComponent implements OnInit, OnDestroy {
-  // posts = [
-  //   {
-  //     title: 'first post',
-  //     content: 'this is the first post contect',
-  //   },
-  //   {
-  //     title: 'second post',
-  //     content: 'this is the second post contect',
-  //   },
-  //   {
-  //     title: 'third post',
-  //     content: 'this is the third post contect',
-  //   },
-  // ];
-
   posts: Post[] = [];
   private postsSub: Subscription;
 
@@ -37,6 +22,10 @@ export class PostListComponent implements OnInit, OnDestroy {
       .subscribe((posts: Post[]) => {
         this.posts = posts;
       });
+  }
+
+  onDelete(postId: string) {
+    this.postsService.deletePost(postId);
   }
 
   ngOnDestroy() {

@@ -1,7 +1,21 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+
+const Post = require("./models/post");
 
 const app = express();
+
+mongoose
+  .connect(
+    "mongodb+srv://ccdbuser:P0DFyFvqH5aTUO0P@cluster0.mgrua.mongodb.net/node-angular?retryWrites=true&w=majority"
+  )
+  .then(() => {
+    console.log("Connected to database!");
+  })
+  .catch(() => {
+    console.log("Connection failed");
+  });
 
 // Update this before production, depreciated, use express.json, express.url.....
 app.use(bodyParser.json());
@@ -21,8 +35,11 @@ app.use((req, res, next) => {
 });
 
 app.post("/api/posts", (req, res, next) => {
-  const post = req.body;
-  console.log(post);
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content,
+  });
+  post.save();
   res.status(201).json({
     message: "Post added sucessfully",
   });

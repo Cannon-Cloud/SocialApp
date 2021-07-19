@@ -9,7 +9,7 @@ const router = express.Router();
 const MIME_TYPE_MAP = {
   "image/png": "png",
   "image/jpeg": "jpg",
-  "imate/jpg": "jpg",
+  "image/jpg": "jpg",
 };
 
 const storage = multer.diskStorage({
@@ -44,10 +44,8 @@ router.post(
       res.status(201).json({
         message: "Post added successfully",
         post: {
+          ...createdPost,
           id: createdPost._id,
-          title: createdPost.title,
-          content: createdPost.content,
-          imagePath: createdPost.imagePath,
         },
       });
     });
@@ -69,6 +67,7 @@ router.put(
       title: req.body.title,
       content: req.body.content,
       imagePath: imagePath,
+      creator: req.userData.userId,
     });
     Post.updateOne(
       { _id: req.params.id, creator: req.userData.userId },
@@ -118,6 +117,7 @@ router.get("/:id", (req, res, next) => {
 router.delete("/:id", checkAuth, (req, res, next) => {
   Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(
     (result) => {
+      console.log(result);
       if (result.n > 0) {
         res.status(200).json({ message: "Deletion successful!" });
       } else {
